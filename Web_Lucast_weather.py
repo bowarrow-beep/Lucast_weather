@@ -7,7 +7,8 @@ from timezonefinder import TimezoneFinder
 
 app = Flask(__name__)
 
-API_KEY = "b7e695f6ea4f0763a17392472fbb111a"
+import os
+API_KEY = os.getenv("API_KEY")
 
 @app.route("/", methods=["GET", "POST"])
 def index():
