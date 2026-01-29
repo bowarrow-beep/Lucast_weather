@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Lucast Weather</title>
+
+    <!-- Tailwind CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Enable dark mode -->
+    <script>
+        tailwind.config = {
+            darkMode: 'class'
+        }
+    </script>
+</head>
+
+<!-- Light / Dark background -->
+<body class="bg-gradient-to-br from-blue-900 to-blue-700 dark:from-gray-900 dark:to-gray-800 min-h-screen text-white">
+
+<!-- Theme Toggle Button -->
+<div class="flex justify-end p-4">
+    <button id="themeToggle"
+        class="bg-white/20 backdrop-blur-md px-4 py-2 rounded-xl text-white hover:bg-white/30 transition">
+        🌙 Dark
+    </button>
+</div>
+
+<div class="max-w-5xl mx-auto py-12 px-4">
+
+    <!-- Title -->
+    <h1 class="text-5xl font-extrabold text-center mb-10 tracking-wide drop-shadow-lg">
+        Lucast Weather
+    </h1>
+
+    <!-- Search Bar -->
+    <form method="POST" class="flex justify-center mb-10">
+        <input 
+            name="city" 
+            placeholder="Enter city" 
+            class="w-1/2 px-4 py-3 rounded-l-xl text-black text-lg focus:outline-none"
+        >
+        <button 
+            class="bg-white text-blue-900 px-6 py-3 rounded-r-xl font-bold text-lg hover:bg-gray-200 transition">
+            Search
+        </button>
+    </form>
+
+    {% if weather %}
+
+    <!-- Current Weather Card -->
+    <div class="backdrop-blur-xl bg-white/20 dark:bg-white/10 rounded-2xl shadow-2xl p-8 mb-12">
+        <h2 class="text-4xl font-bold mb-2">{{ weather.city }}</h2>
+        <p class="text-gray-200 dark:text-gray-300 text-lg mb-6">
+            {{ weather.timezone }} — {{ weather.time }}
+        </p>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 text-lg">
+            <div>
+                <p><span class="font-bold">Temperature:</span> {{ weather.temp }}°C</p>
+                <p><span class="font-bold">Humidity:</span> {{ weather.humidity }}%</p>
+                <p><span class="font-bold">Pressure:</span> {{ weather.pressure }} hPa</p>
+            </div>
+            <div>
+                <p><span class="font-bold">Wind:</span> {{ weather.wind }} m/s</p>
+                <p><span class="font-bold">Description:</span> {{ weather.desc }}</p>
+                <p><span class="font-bold">Lat/Lon:</span> {{ weather.lat }}°N | {{ weather.lon }}°E</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Forecast Title -->
+    <h3 class="text-3xl font-bold text-center mb-6">5-Day Forecast</h3>
+
+    <!-- Forecast Cards -->
+    <div class="grid grid-cols-2 md:grid-cols-5 gap-6">
+
+        {% for day in forecast %}
+        <div class="backdrop-blur-xl bg-white/20 dark:bg-white/10 rounded-xl shadow-xl p-4 text-center">
+            <p class="font-bold text-lg mb-2">{{ day.date }}</p>
+            <img src="https://openweathermap.org/img/wn/{{ day.icon }}@2x.png" class="mx-auto">
+            <p class="text-xl font-semibold">{{ day.temp }}°C</p>
+            <p class="text-gray-200 dark:text-gray-300 text-sm">Feels {{ day.feels }}°C</p>
+        </div>
+        {% endfor %}
+
+    </div>
+
+    {% endif %}
+
+</div>
+
+<!-- Dark Mode Script -->
+<script>
+    const html = document.documentElement;
+    const btn = document.getElementById("themeToggle");
+
+    // Load saved theme
+    if (localStorage.theme === "dark") {
+        html.classList.add("dark");
+        btn.textContent = "☀️ Light";
+    }
+
+    btn.addEventListener("click", () => {
+        if (html.classList.contains("dark")) {
+            html.classList.remove("dark");
+            localStorage.theme = "light";
+            btn.textContent = "🌙 Dark";
+        } else {
+            html.classList.add("dark");
+            localStorage.theme = "dark";
+            btn.textContent = "☀️ Light";
+        }
+    });
+</script>
+
+</body>
+</html>
